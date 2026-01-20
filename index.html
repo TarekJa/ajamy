@@ -51,6 +51,21 @@
     .primary{color:#fff;background:linear-gradient(135deg,var(--teal),color-mix(in srgb,var(--teal) 60%,#80B030));box-shadow:0 10px 22px rgba(2,6,23,.10)}
     .secondary{background:#fff;border:1px solid var(--b);color:#162621}
     .note{padding:0 16px 16px;color:var(--muted);font-size:12px}
+    .table-wrap{
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-top: 1px solid var(--border);
+}
+
+/* خلي الجدول ما “يضغط” الأعمدة ويقصّها */
+#items{
+  min-width: 780px; /* عدّلها إذا بدك (720-900) حسب ما تحب */
+}
+@media (max-width: 600px){
+  .num{ width: 120px; }
+  .qty, .price{ width: 110px; }
+}
+
   </style>
 </head>
 <body>
@@ -81,7 +96,11 @@
         <div class="field"><label>To</label><input id="to" placeholder="الوجهة" /></div>
       </div>
 
-      <table id="items">
+     <div class="table-wrap">
+  <table id="items">
+    ...
+  </table>
+</div>
         <thead>
           <tr>
             <th style="width:80px">اختيار</th>
