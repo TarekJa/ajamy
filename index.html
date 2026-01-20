@@ -5,75 +5,215 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Al Ajamy Food | Invoice Tracker</title>
 
-  <!-- Favicons (from your logo) -->
+  <!-- Favicons (ضع الملفات بنفس مجلد index.html) -->
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" href="favicon-32.png" sizes="32x32">
   <link rel="icon" type="image/png" href="favicon-192.png" sizes="192x192">
-  <link rel="apple-touch-icon" href="favicon-180.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta name="theme-color" content="#5B9F8A">
 
   <style>
-    :root{--teal:#5B9F8A;--dark:#27433A;--accent:#F0A352;--bg:#F7FBFF;--card:#fff;--b:#e2e8f0;--muted:#64748b}
+    :root{
+      /* ألوان مستوحاة من اللوغو */
+      --brand:#5B9F8A;      /* Teal الأساسي */
+      --brand-dark:#27433A; /* Teal غامق */
+      --ink:#162621;        /* نص غامق */
+      --leaf:#80B030;       /* أخضر أوراق */
+      --accent:#F0A352;     /* برتقالي/ذهبي */
+      --bg-1:#F7FBFF;
+      --bg-2:#F3FFF8;
+      --card:#FFFFFF;
+      --border:#E2E8F0;
+      --text:#0F172A;
+      --muted:#64748B;
+    }
+
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#0f172a;
+    body{
+      margin:0;
+      color:var(--text);
       background:
-        radial-gradient(1100px 520px at 18% 10%, color-mix(in srgb, var(--teal) 22%, transparent), transparent 62%),
-        radial-gradient(900px 520px at 70% 85%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%),
-        linear-gradient(135deg,#F7FBFF,#F3FFF8);
-      min-height:100vh}
-    .header{position:sticky;top:0;z-index:5;backdrop-filter:blur(10px);background:color-mix(in srgb,#fff 70%,transparent);border-bottom:1px solid color-mix(in srgb,var(--b) 70%,transparent)}
-    .header-inner{max-width:1100px;margin:0 auto;padding:10px 16px;display:flex;justify-content:center}
-    .brand{display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:18px;background:linear-gradient(135deg,color-mix(in srgb,var(--teal) 12%,#fff),color-mix(in srgb,var(--accent) 10%,#fff));border:1px solid color-mix(in srgb,var(--b) 85%,transparent);box-shadow:0 12px 30px rgba(2,6,23,.08)}
-    .brand img{width:76px;height:56px;object-fit:contain;border-radius:16px;background:#fff;padding:8px;border:1px solid color-mix(in srgb,var(--b) 85%,transparent)}
-    .brand b{display:block;color:#162621;font-size:16px;line-height:1.1}
-    .brand span{display:block;color:var(--muted);font-size:12px;margin-top:3px}
-    .wrap{max-width:1100px;margin:0 auto;padding:16px}
-    .card{background:var(--card);border:1px solid color-mix(in srgb,var(--b) 90%,transparent);border-radius:18px;box-shadow:0 12px 30px rgba(2,6,23,.08);overflow:hidden}
-    .card-head{padding:14px 16px;background:linear-gradient(135deg,color-mix(in srgb,var(--teal) 14%,#fff),color-mix(in srgb,var(--accent) 10%,#fff));border-bottom:1px solid color-mix(in srgb,var(--b) 85%,transparent)}
-    .card-head h3{margin:0;font-size:16px;color:#162621}
-    .card-head p{margin:6px 0 0;color:var(--muted);font-size:13px}
-    .grid{display:flex;flex-wrap:wrap;gap:12px;padding:14px 16px 4px}
-    .field{flex:1 1 200px;min-width:180px}
-    label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
-    input,textarea{width:100%;border:1px solid var(--b);border-radius:12px;padding:10px 12px;font:inherit;background:#fff;outline:none}
-    input{height:40px}
-    textarea{min-height:42px;resize:vertical}
-    input:focus,textarea:focus{border-color:color-mix(in srgb,var(--teal) 70%,var(--b));box-shadow:0 0 0 4px color-mix(in srgb,var(--teal) 18%,transparent)}
-    table{width:100%;border-collapse:collapse}
-    th,td{border-top:1px solid var(--b);padding:10px 12px;text-align:right;vertical-align:middle}
-    thead th{border-top:none;background:#fbfdff;color:var(--muted);font-size:12px}
-    tfoot td{background:#fbfdff;font-weight:700}
-    .qty,.price{width:130px;height:36px;border-radius:10px;padding:8px 10px}
-    .disabled{background:#f1f5f9 !important;color:#94a3b8;cursor:not-allowed}
-    input[type=checkbox]{width:18px;height:18px;accent-color:var(--teal);cursor:pointer}
-    .actions{display:flex;gap:10px;flex-wrap:wrap;padding:0 16px 16px}
-    button{border:none;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer}
-    .primary{color:#fff;background:linear-gradient(135deg,var(--teal),color-mix(in srgb,var(--teal) 60%,#80B030));box-shadow:0 10px 22px rgba(2,6,23,.10)}
-    .secondary{background:#fff;border:1px solid var(--b);color:#162621}
-    .note{padding:0 16px 16px;color:var(--muted);font-size:12px}
+        radial-gradient(1100px 520px at 18% 10%, color-mix(in srgb, var(--brand) 22%, transparent), transparent 62%),
+        radial-gradient(1000px 520px at 85% 0%,  color-mix(in srgb, var(--leaf) 18%, transparent), transparent 60%),
+        radial-gradient(900px 520px at 70% 85%,  color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2));
+      min-height:100vh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    .wrap{max-width:1100px; margin:0 auto; padding:18px 16px 40px;}
+
+    /* Header */
+    .header{
+      position:sticky; top:0; z-index:20;
+      backdrop-filter: blur(10px);
+      background: color-mix(in srgb, #ffffff 70%, transparent);
+      border-bottom: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+    }
+    .header-inner{
+      max-width:1100px; margin:0 auto; padding:10px 16px;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .logo{
+      display:flex; align-items:center; gap:12px;
+      padding:10px 16px;
+      border-radius:18px;
+      background: linear-gradient(135deg,
+        color-mix(in srgb, var(--brand) 14%, #fff),
+        color-mix(in srgb, var(--leaf) 10%, #fff)
+      );
+      border:1px solid color-mix(in srgb, var(--border) 85%, transparent);
+      box-shadow: 0 12px 30px rgba(2,6,23,.08);
+    }
+    .logo img{
+      width:78px; height:56px;
+      object-fit:contain;
+      border-radius:16px;
+      background:#fff;
+      padding:8px;
+      border:1px solid color-mix(in srgb, var(--border) 85%, transparent);
+      box-shadow: 0 10px 25px rgba(2,6,23,.10);
+    }
+    .logo .title{display:flex; flex-direction:column; line-height:1.15;}
+    .logo .title b{
+      font-size:16px;
+      color:var(--ink);
+      letter-spacing:.2px;
+    }
+    .logo .title span{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:3px;
+    }
+
+    /* Card */
+    .card{
+      margin-top:16px;
+      background:var(--card);
+      border:1px solid color-mix(in srgb, var(--border) 90%, transparent);
+      border-radius:18px;
+      box-shadow: 0 12px 30px rgba(2,6,23,.08);
+      overflow:hidden;
+    }
+    .card-head{
+      padding:14px 16px;
+      background: linear-gradient(135deg,
+        color-mix(in srgb, var(--brand) 16%, #fff),
+        color-mix(in srgb, var(--accent) 10%, #fff)
+      );
+      border-bottom: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+    }
+    .card-head h3{margin:0; font-size:16px; color:var(--ink);}
+    .card-head p{margin:6px 0 0; color:var(--muted); font-size:13px;}
+
+    .grid{
+      display:flex; gap:12px; flex-wrap:wrap;
+      padding:14px 16px 4px;
+    }
+    .field{display:flex; flex-direction:column; gap:6px; min-width:180px; flex:1 1 200px;}
+    .field label{font-size:12px; color:var(--muted);}
+    input, textarea{
+      border-radius:12px;
+      border:1px solid var(--border);
+      outline:none;
+      background:#fff;
+      padding:10px 12px;
+      font: inherit;
+    }
+    input{height:40px;}
+    textarea{min-height:42px; resize:vertical;}
+    input:focus, textarea:focus{
+      border-color: color-mix(in srgb, var(--brand) 70%, var(--border));
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand) 18%, transparent);
+    }
+
+    /* Table: make it scrollable on mobile */
     .table-wrap{
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  border-top: 1px solid var(--border);
-}
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      border-top:1px solid var(--border);
+    }
+    table#items{
+      width:100%;
+      border-collapse:collapse;
+      min-width: 820px; /* يمنع قص الأعمدة على الموبايل */
+    }
+    th,td{border-top:1px solid var(--border); padding:10px 12px; text-align:right; vertical-align:middle;}
+    thead th{
+      font-size:12px; color:var(--muted);
+      background:#fbfdff;
+      border-top:none;
+      position: sticky;
+      top: 0; /* داخل السكرول */
+    }
+    .num{width:150px;}
+    .qty, .price{
+      width:135px; height:36px;
+      border-radius:10px;
+      padding:8px 10px;
+    }
+    .disabled{
+      background:#f1f5f9 !important;
+      color:#94a3b8;
+      cursor:not-allowed;
+    }
+    input[type="checkbox"]{
+      width:18px; height:18px;
+      accent-color: var(--brand);
+      cursor:pointer;
+    }
+    .lineTotal, #grandTotal{font-variant-numeric: tabular-nums;}
+    tfoot td{background:#fbfdff; font-weight:700;}
 
-/* خلي الجدول ما “يضغط” الأعمدة ويقصّها */
-#items{
-  min-width: 780px; /* عدّلها إذا بدك (720-900) حسب ما تحب */
-}
-@media (max-width: 600px){
-  .num{ width: 120px; }
-  .qty, .price{ width: 110px; }
-}
+    .footer-fields{
+      padding:14px 16px 18px;
+      display:flex; gap:12px; flex-wrap:wrap;
+    }
+    .footer-fields .field{flex:1 1 420px;}
 
+    .actions{
+      display:flex; gap:10px; flex-wrap:wrap;
+      padding: 0 16px 16px;
+      justify-content:flex-start;
+    }
+    button{
+      border:none;
+      border-radius:12px;
+      padding:10px 14px;
+      cursor:pointer;
+      font-weight:600;
+      background: linear-gradient(135deg, var(--brand), color-mix(in srgb, var(--leaf) 55%, var(--brand)));
+      color:#fff;
+      box-shadow: 0 10px 22px rgba(2,6,23,.10);
+    }
+    button.secondary{
+      background:#fff;
+      color:var(--ink);
+      border:1px solid var(--border);
+      box-shadow:none;
+    }
+    .note{
+      padding: 0 16px 16px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width:600px){
+      .wrap{padding:14px 12px 28px;}
+      .logo img{width:72px; height:54px;}
+      .logo .title b{font-size:14px;}
+      .field{min-width: 100%;}
+    }
   </style>
 </head>
+
 <body>
   <div class="header">
     <div class="header-inner">
-      <div class="brand">
+      <div class="logo">
+        <!-- ضع ملف اللوغو بنفس مجلد الصفحة وسمّه logo.png -->
         <img src="logo.png" alt="Al Ajamy Food Logo" />
-        <div>
+        <div class="title">
           <b>Al Ajamy Food | العجمي</b>
           <span>Invoice Tracker — فعّل الصنف بالتيك ثم أدخل الكمية والسعر</span>
         </div>
@@ -85,50 +225,72 @@
     <div class="card">
       <div class="card-head">
         <h3>إدخال الفاتورة</h3>
-        <p>الحقول (الكمية/السعر) لا تعمل إلا بعد تفعيل الصنف.</p>
+        <p>الحقول (الكمية/السعر) لا تعمل إلا بعد تفعيل الصنف. على الموبايل يمكنك السحب يمين/يسار داخل جدول الأصناف.</p>
       </div>
 
       <div class="grid">
-        <div class="field"><label>رقم الفاتورة</label><input id="invoiceNo" placeholder="مثال: INV-001" /></div>
-        <div class="field"><label>التاريخ</label><input id="date" type="date" /></div>
-        <div class="field"><label>الزبون</label><input id="customer" placeholder="اسم الزبون" /></div>
-        <div class="field"><label>From</label><input id="from" placeholder="المصدر" /></div>
-        <div class="field"><label>To</label><input id="to" placeholder="الوجهة" /></div>
+        <div class="field">
+          <label>رقم الفاتورة</label>
+          <input id="invoiceNo" placeholder="مثال: INV-001" />
+        </div>
+        <div class="field">
+          <label>التاريخ</label>
+          <input id="date" type="date" />
+        </div>
+        <div class="field">
+          <label>الزبون</label>
+          <input id="customer" placeholder="اسم الزبون" />
+        </div>
+        <div class="field">
+          <label>From</label>
+          <input id="from" placeholder="المصدر" />
+        </div>
+        <div class="field">
+          <label>To</label>
+          <input id="to" placeholder="الوجهة" />
+        </div>
       </div>
 
-     <div class="table-wrap">
-  <table id="items">
-    ...
-  </table>
-</div>
-        <thead>
-          <tr>
-            <th style="width:80px">اختيار</th>
-            <th>الصنف</th>
-            <th style="width:150px">الكمية</th>
-            <th style="width:150px">سعر الوحدة</th>
-            <th style="width:150px">الإجمالي</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-        <tfoot>
-          <tr>
-            <td colspan="4" style="text-align:left">المجموع</td>
-            <td><span id="grandTotal">0.00</span></td>
-          </tr>
-        </tfoot>
-      </table>
+      <div class="table-wrap">
+        <table id="items">
+          <thead>
+            <tr>
+              <th style="width:90px">اختيار</th>
+              <th>الصنف</th>
+              <th class="num">الكمية</th>
+              <th class="num">سعر الوحدة</th>
+              <th class="num">الإجمالي</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4" style="text-align:left">المجموع</td>
+              <td><span id="grandTotal">0.00</span></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
 
-      <div class="grid">
-        <div class="field" style="flex:1 1 420px"><label>Details</label><textarea id="details" placeholder="تفاصيل إضافية..."></textarea></div>
-        <div class="field" style="flex:1 1 420px"><label>Comments</label><textarea id="comments" placeholder="ملاحظات..."></textarea></div>
+      <div class="footer-fields">
+        <div class="field">
+          <label>Details</label>
+          <textarea id="details" placeholder="تفاصيل إضافية..."></textarea>
+        </div>
+        <div class="field">
+          <label>Comments</label>
+          <textarea id="comments" placeholder="ملاحظات..."></textarea>
+        </div>
       </div>
 
       <div class="actions">
-        <button class="primary" id="exportJsonBtn" type="button">تصدير JSON</button>
-        <button class="secondary" id="resetBtn" type="button">مسح النموذج</button>
+        <button id="exportJsonBtn" type="button">تصدير JSON</button>
+        <button id="resetBtn" class="secondary" type="button">مسح النموذج</button>
       </div>
-      <div class="note">"تصدير JSON" يعطيك ملف جاهز لإرساله لـ API/قاعدة بيانات لاحقاً.</div>
+
+      <div class="note">
+        زر "تصدير JSON" يعطيك ملف جاهز لتخزينه بقاعدة بيانات عبر API لاحقاً.
+      </div>
     </div>
   </div>
 
@@ -145,21 +307,22 @@
       "Labneh /لبنة"
     ];
 
-    const tbody = document.querySelector('#items tbody');
-    const grandTotalEl = document.getElementById('grandTotal');
+    const tbody = document.querySelector("#items tbody");
+    const grandTotalEl = document.getElementById("grandTotal");
 
-    function recalc(){
-      let sum=0;
-      tbody.querySelectorAll('tr').forEach(tr=>{
-        const cb = tr.querySelector('input[type=checkbox]');
-        const qty = tr.querySelector('.qty');
-        const price = tr.querySelector('.price');
-        const totalEl = tr.querySelector('.lineTotal');
-        let line=0;
-        if(cb.checked){
-          const q = Number(qty.value||0);
-          const p = Number(price.value||0);
-          line = q*p;
+    function recalc() {
+      let sum = 0;
+      tbody.querySelectorAll("tr").forEach(tr => {
+        const cb = tr.querySelector("input[type=checkbox]");
+        const qty = tr.querySelector(".qty");
+        const price = tr.querySelector(".price");
+        const totalEl = tr.querySelector(".lineTotal");
+
+        let line = 0;
+        if (cb.checked) {
+          const q = Number(qty.value || 0);
+          const p = Number(price.value || 0);
+          line = q * p;
         }
         totalEl.textContent = line.toFixed(2);
         sum += line;
@@ -167,63 +330,79 @@
       grandTotalEl.textContent = sum.toFixed(2);
     }
 
-    function setEnabled(tr, enabled){
-      const qty = tr.querySelector('.qty');
-      const price = tr.querySelector('.price');
-      qty.disabled = !enabled; price.disabled = !enabled;
-      qty.classList.toggle('disabled', !enabled);
-      price.classList.toggle('disabled', !enabled);
-      if(!enabled){ qty.value=''; price.value=''; }
+    function setEnabled(tr, enabled) {
+      const qty = tr.querySelector(".qty");
+      const price = tr.querySelector(".price");
+
+      qty.disabled = !enabled;
+      price.disabled = !enabled;
+
+      qty.classList.toggle("disabled", !enabled);
+      price.classList.toggle("disabled", !enabled);
+
+      if (!enabled) { qty.value = ""; price.value = ""; }
       recalc();
     }
 
-    function buildRows(){
-      tbody.innerHTML='';
-      products.forEach(name=>{
-        const tr = document.createElement('tr');
+    function buildRows() {
+      tbody.innerHTML = "";
+      products.forEach(name => {
+        const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td><input type="checkbox"></td>
+          <td><input type="checkbox" /></td>
           <td>${name}</td>
-          <td><input class="qty disabled" type="number" min="0" step="1" disabled></td>
-          <td><input class="price disabled" type="number" min="0" step="0.01" disabled></td>
+          <td><input class="qty disabled" type="number" min="0" step="1" inputmode="numeric" disabled /></td>
+          <td><input class="price disabled" type="number" min="0" step="0.01" inputmode="decimal" disabled /></td>
           <td class="lineTotal">0.00</td>
         `;
-        const cb = tr.querySelector('input[type=checkbox]');
-        cb.addEventListener('change', ()=>setEnabled(tr, cb.checked));
-        tr.querySelectorAll('input[type=number]').forEach(inp=>inp.addEventListener('input', recalc));
+
+        const cb = tr.querySelector("input[type=checkbox]");
+        cb.addEventListener("change", () => setEnabled(tr, cb.checked));
+        tr.querySelectorAll("input[type=number]").forEach(inp => inp.addEventListener("input", recalc));
+
         tbody.appendChild(tr);
       });
     }
 
-    function collectData(){
-      const items=[];
-      tbody.querySelectorAll('tr').forEach(tr=>{
-        const checked = tr.querySelector('input[type=checkbox]').checked;
-        if(!checked) return;
+    function collectData() {
+      const items = [];
+      tbody.querySelectorAll("tr").forEach(tr => {
+        const checked = tr.querySelector("input[type=checkbox]").checked;
+        if (!checked) return;
+
         const product = tr.children[1].textContent.trim();
-        const qty = Number(tr.querySelector('.qty').value||0);
-        const unitPrice = Number(tr.querySelector('.price').value||0);
-        items.push({product, qty, unitPrice, total: Number((qty*unitPrice).toFixed(2))});
+        const qty = Number(tr.querySelector(".qty").value || 0);
+        const unitPrice = Number(tr.querySelector(".price").value || 0);
+
+        items.push({
+          product,
+          qty,
+          unitPrice,
+          total: Number((qty * unitPrice).toFixed(2))
+        });
       });
+
+      const grandTotal = Number(grandTotalEl.textContent || 0);
+
       return {
-        invoiceNo: document.getElementById('invoiceNo').value.trim(),
-        date: document.getElementById('date').value,
-        customer: document.getElementById('customer').value.trim(),
-        from: document.getElementById('from').value.trim(),
-        to: document.getElementById('to').value.trim(),
-        details: document.getElementById('details').value.trim(),
-        comments: document.getElementById('comments').value.trim(),
+        invoiceNo: document.getElementById("invoiceNo").value.trim(),
+        date: document.getElementById("date").value,
+        customer: document.getElementById("customer").value.trim(),
+        from: document.getElementById("from").value.trim(),
+        to: document.getElementById("to").value.trim(),
+        details: document.getElementById("details").value.trim(),
+        comments: document.getElementById("comments").value.trim(),
         items,
-        grandTotal: Number(grandTotalEl.textContent||0)
+        grandTotal
       };
     }
 
-    function downloadJson(data){
-      const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    function downloadJson(data) {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
-      const safeNo = (data.invoiceNo || 'invoice').replace(/[^\w\-]+/g,'_');
+      const safeNo = (data.invoiceNo || "invoice").replace(/[^\w\-]+/g, "_");
       a.download = `${safeNo}.json`;
       document.body.appendChild(a);
       a.click();
@@ -231,15 +410,31 @@
       URL.revokeObjectURL(url);
     }
 
-    function resetForm(){
-      ['invoiceNo','date','customer','from','to','details','comments'].forEach(id=>document.getElementById(id).value='');
-      tbody.querySelectorAll('tr').forEach(tr=>{tr.querySelector('input[type=checkbox]').checked=false; setEnabled(tr,false);});
+    function resetForm() {
+      document.getElementById("invoiceNo").value = "";
+      document.getElementById("date").value = "";
+      document.getElementById("customer").value = "";
+      document.getElementById("from").value = "";
+      document.getElementById("to").value = "";
+      document.getElementById("details").value = "";
+      document.getElementById("comments").value = "";
+
+      tbody.querySelectorAll("tr").forEach(tr => {
+        tr.querySelector("input[type=checkbox]").checked = false;
+        setEnabled(tr, false);
+      });
+
       recalc();
     }
 
-    document.getElementById('exportJsonBtn').addEventListener('click', ()=>downloadJson(collectData()));
-    document.getElementById('resetBtn').addEventListener('click', resetForm);
+    document.getElementById("exportJsonBtn").addEventListener("click", () => {
+      const data = collectData();
+      downloadJson(data);
+    });
 
+    document.getElementById("resetBtn").addEventListener("click", resetForm);
+
+    // Init
     buildRows();
     recalc();
   </script>
