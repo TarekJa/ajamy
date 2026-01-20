@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Invoice Tracker</title>
+  <style>
+    body{font-family:system-ui; margin:16px}
+    table{width:100%; border-collapse:collapse}
+    th,td{border:1px solid #ddd; padding:8px}
+    input[type="number"]{width:120px}
+    .disabled{background:#f3f4f6}
+    .row{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px}
+    .row > label{display:flex; gap:8px; align-items:center}
+  </style>
+</head>
+<body>
+
+<h3>Invoice</h3>
+<div class="row">
+  <label>رقم الفاتورة <input id="invoiceNo" /></label>
+  <label>التاريخ <input id="date" type="date" /></label>
+  <label>الزبون <input id="customer" /></label>
+  <label>From <input id="from" /></label>
+  <label>To <input id="to" /></label>
+</div>
+
+<table id="items">
+  <thead>
+    <tr>
+      <th>اختيار</th>
+      <th>الصنف</th>
+      <th>الكمية</th>
+      <th>سعر الوحدة</th>
+      <th>الإجمالي</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+  <tfoot>
+    <tr>
+      <td colspan="4" style="text-align:left"><b>المجموع</b></td>
+      <td><b id="grandTotal">0</b></td>
+    </tr>
+  </tfoot>
+</table>
+
+<div style="margin-top:12px">
+  <label>Details <input id="details" style="width:60%" /></label>
+</div>
+<div style="margin-top:8px">
+  <label>Comments <input id="comments" style="width:60%" /></label>
+</div>
+
+<script>
+  const products = [
+    "Garlic Sauce/كريم الثوم",
+    "Hummus Alajamy /حمص العجمي",
+    "Hummus Large boxes /حمص علب كبار",
+    "Hummus Small boxes /حمص علب صغار",
+    "Hummus Zad Al-Arabi /حمص زاد العربي",
+    "Hummus Al-Nuzha /حمص النزهة",
+    "Hummus Al-Khal /حمص الخال",
+    "Mutabal /متبل",
+    "Labneh /لبنة"
+  ];
+
+  const tbody = document.querySelector("#items tbody");
+  const grandTotalEl = document.getElementById("grandTotal");
+
+  function recalc() {
+    let sum = 0;
+    tbody.querySelectorAll("tr").forEach(tr => {
+      const cb = tr.querySelector("input[type=checkbox]");
+      const qty = tr.querySelector(".qty");
+      const price = tr.querySelector(".price");
+      const totalEl = tr.querySelector(".lineTotal");
+
+      let line = 0;
+      if (cb.checked) {
+        const q = Number(qty.value || 0);
+        const p = Number(price.value || 0);
+        line = q * p;
+      }
+      totalEl.textContent = line.toFixed(2);
+      sum += line;
+    });
+    grandTotalEl.textContent = sum.toFixed(2);
+  }
+
+  function setEnabled(tr, enabled) {
+    const qty = tr.querySelector(".qty");
+    const price = tr.querySelector(".price");
+    qty.disabled = !enabled;
+    price.disabled = !enabled;
+
+    qty.classList.toggle("disabled", !enabled);
+    price.classList.toggle("disabled", !enabled);
+
+    if (!enabled) { qty.value = ""; price.value = ""; }
+    recalc();
+  }
+
+  products.forEach(name => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><input type="checkbox" /></td>
+      <td>${name}</td>
+      <td><input class="qty" type="number" min="0" step="1" disabled /></td>
+      <td><input class="price" type="number" min="0" step="0.01" disabled /></td>
+      <td class="lineTotal">0.00</td>
+    `;
+    const cb = tr.querySelector("input[type=checkbox]");
+    cb.addEventListener("change", () => setEnabled(tr, cb.checked));
+    tr.querySelectorAll("input[type=number]").forEach(inp => inp.addEventListener("input", recalc));
+    tbody.appendChild(tr);
+  });
+</script>
+
+</body>
+</html>
