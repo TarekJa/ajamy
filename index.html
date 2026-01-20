@@ -3,118 +3,419 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Invoice Tracker</title>
+  <title>Al Ajamy Food | Invoice Tracker</title>
+
   <style>
-    body{font-family:system-ui; margin:16px}
-    table{width:100%; border-collapse:collapse}
-    th,td{border:1px solid #ddd; padding:8px}
-    input[type="number"]{width:120px}
-    .disabled{background:#f3f4f6}
-    .row{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px}
-    .row > label{display:flex; gap:8px; align-items:center}
+    :root{
+      /* ألوان مستوحاة من اللوغو */
+      --brand-1:#5B9F8A;   /* Teal الأساسي */
+      --brand-1d:#27433A;  /* Teal غامق */
+      --brand-1x:#162621;  /* Teal أغمق */
+      --leaf-1:#80B030;    /* أخضر أوراق */
+      --leaf-2:#B0D030;    /* أخضر فاتح */
+      --accent:#F0A352;    /* برتقالي/ذهبي */
+      --bg-1:#F7FBFF;
+      --bg-2:#F3FFF8;
+      --card:#FFFFFF;
+      --border:#E2E8F0;
+      --text:#0F172A;
+      --muted:#64748B;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      color:var(--text);
+      background:
+        radial-gradient(1100px 520px at 18% 10%, color-mix(in srgb, var(--brand-1) 22%, transparent), transparent 62%),
+        radial-gradient(1000px 520px at 85% 0%,  color-mix(in srgb, var(--leaf-1) 18%, transparent), transparent 60%),
+        radial-gradient(900px 520px at 70% 85%,  color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2));
+      min-height:100vh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    .wrap{max-width:1100px; margin:0 auto; padding:18px 16px 40px;}
+
+    /* Header */
+    .header{
+      position:sticky; top:0; z-index:20;
+      backdrop-filter: blur(10px);
+      background: color-mix(in srgb, #ffffff 70%, transparent);
+      border-bottom: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+    }
+    .header-inner{
+      max-width:1100px; margin:0 auto; padding:10px 16px;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .logo{
+      display:flex; align-items:center; gap:12px;
+      padding:10px 16px;
+      border-radius:18px;
+      background: linear-gradient(135deg,
+        color-mix(in srgb, var(--brand-1) 12%, #fff),
+        color-mix(in srgb, var(--leaf-1) 10%, #fff)
+      );
+      border:1px solid color-mix(in srgb, var(--border) 85%, transparent);
+      box-shadow: 0 12px 30px rgba(2,6,23,.08);
+    }
+    .logo img{
+      width:76px; height:56px;
+      object-fit:contain;
+      border-radius:16px;
+      background:#fff;
+      padding:8px;
+      border:1px solid color-mix(in srgb, var(--border) 85%, transparent);
+      box-shadow: 0 10px 25px rgba(2,6,23,.10);
+    }
+    .logo .title{display:flex; flex-direction:column; line-height:1.15;}
+    .logo .title b{
+      font-size:16px;
+      color:var(--brand-1x);
+      letter-spacing:.2px;
+    }
+    .logo .title span{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:3px;
+    }
+
+    /* Card */
+    .card{
+      margin-top:16px;
+      background:var(--card);
+      border:1px solid color-mix(in srgb, var(--border) 90%, transparent);
+      border-radius:18px;
+      box-shadow: 0 12px 30px rgba(2,6,23,.08);
+      overflow:hidden;
+    }
+    .card-head{
+      padding:14px 16px;
+      background: linear-gradient(135deg,
+        color-mix(in srgb, var(--brand-1) 14%, #fff),
+        color-mix(in srgb, var(--accent) 10%, #fff)
+      );
+      border-bottom: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+    }
+    .card-head h3{margin:0; font-size:16px; color:var(--brand-1x);}
+    .card-head p{margin:6px 0 0; color:var(--muted); font-size:13px;}
+
+    .grid{
+      display:flex; gap:12px; flex-wrap:wrap;
+      padding:14px 16px 4px;
+    }
+    .field{display:flex; flex-direction:column; gap:6px; min-width:180px; flex:1 1 200px;}
+    .field label{font-size:12px; color:var(--muted);}
+    input, textarea{
+      border-radius:12px;
+      border:1px solid var(--border);
+      outline:none;
+      background:#fff;
+      padding:10px 12px;
+      font: inherit;
+    }
+    input{height:40px;}
+    textarea{min-height:42px; resize:vertical;}
+    input:focus, textarea:focus{
+      border-color: color-mix(in srgb, var(--brand-1) 70%, var(--border));
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand-1) 18%, transparent);
+    }
+
+    table{width:100%; border-collapse:collapse;}
+    th,td{border-top:1px solid var(--border); padding:10px 12px; text-align:right; vertical-align:middle;}
+    thead th{
+      font-size:12px; color:var(--muted);
+      background:#fbfdff;
+      border-top:none;
+    }
+    .num{width:140px;}
+    .qty, .price{
+      width:130px; height:36px;
+      border-radius:10px;
+      padding:8px 10px;
+    }
+    .disabled{
+      background:#f1f5f9 !important;
+      color:#94a3b8;
+      cursor:not-allowed;
+    }
+    input[type="checkbox"]{
+      width:18px; height:18px;
+      accent-color: var(--brand-1);
+      cursor:pointer;
+    }
+    .lineTotal, #grandTotal{font-variant-numeric: tabular-nums;}
+    tfoot td{background:#fbfdff; font-weight:700;}
+    .footer-fields{
+      padding:14px 16px 18px;
+      display:flex; gap:12px; flex-wrap:wrap;
+    }
+    .footer-fields .field{flex:1 1 420px;}
+
+    .actions{
+      display:flex; gap:10px; flex-wrap:wrap;
+      padding: 0 16px 16px;
+      justify-content:flex-start;
+    }
+    button{
+      border:none;
+      border-radius:12px;
+      padding:10px 14px;
+      cursor:pointer;
+      font-weight:600;
+      background: linear-gradient(135deg, var(--brand-1), color-mix(in srgb, var(--leaf-1) 55%, var(--brand-1)));
+      color:#fff;
+      box-shadow: 0 10px 22px rgba(2,6,23,.10);
+    }
+    button.secondary{
+      background:#fff;
+      color:var(--brand-1x);
+      border:1px solid var(--border);
+      box-shadow:none;
+    }
+    .note{
+      padding: 0 16px 16px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width:520px){
+      .logo img{width:70px; height:52px;}
+      .logo .title b{font-size:14px;}
+    }
   </style>
 </head>
+
 <body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <!-- ضع ملف اللوغو بنفس مجلد الصفحة وسمّه logo.png أو غيّر المسار هنا -->
+        <img src="logo.png" alt="Al Ajamy Food Logo" />
+        <div class="title">
+          <b>Al Ajamy Food | العجمي</b>
+          <span>Invoice Tracker — فعّل الصنف بالتيك ثم أدخل الكمية والسعر</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<h3>Invoice</h3>
-<div class="row">
-  <label>رقم الفاتورة <input id="invoiceNo" /></label>
-  <label>التاريخ <input id="date" type="date" /></label>
-  <label>الزبون <input id="customer" /></label>
-  <label>From <input id="from" /></label>
-  <label>To <input id="to" /></label>
-</div>
+  <div class="wrap">
+    <div class="card">
+      <div class="card-head">
+        <h3>إدخال الفاتورة</h3>
+        <p>الحقول (الكمية/السعر) لا تعمل إلا بعد تفعيل الصنف.</p>
+      </div>
 
-<table id="items">
-  <thead>
-    <tr>
-      <th>اختيار</th>
-      <th>الصنف</th>
-      <th>الكمية</th>
-      <th>سعر الوحدة</th>
-      <th>الإجمالي</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-  <tfoot>
-    <tr>
-      <td colspan="4" style="text-align:left"><b>المجموع</b></td>
-      <td><b id="grandTotal">0</b></td>
-    </tr>
-  </tfoot>
-</table>
+      <div class="grid">
+        <div class="field">
+          <label>رقم الفاتورة</label>
+          <input id="invoiceNo" placeholder="مثال: INV-001" />
+        </div>
+        <div class="field">
+          <label>التاريخ</label>
+          <input id="date" type="date" />
+        </div>
+        <div class="field">
+          <label>الزبون</label>
+          <input id="customer" placeholder="اسم الزبون" />
+        </div>
+        <div class="field">
+          <label>From</label>
+          <input id="from" placeholder="المصدر" />
+        </div>
+        <div class="field">
+          <label>To</label>
+          <input id="to" placeholder="الوجهة" />
+        </div>
+      </div>
 
-<div style="margin-top:12px">
-  <label>Details <input id="details" style="width:60%" /></label>
-</div>
-<div style="margin-top:8px">
-  <label>Comments <input id="comments" style="width:60%" /></label>
-</div>
+      <table id="items">
+        <thead>
+          <tr>
+            <th style="width:80px">اختيار</th>
+            <th>الصنف</th>
+            <th class="num">الكمية</th>
+            <th class="num">سعر الوحدة</th>
+            <th class="num">الإجمالي</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4" style="text-align:left">المجموع</td>
+            <td><span id="grandTotal">0.00</span></td>
+          </tr>
+        </tfoot>
+      </table>
 
-<script>
-  const products = [
-    "Garlic Sauce/كريم الثوم",
-    "Hummus Alajamy /حمص العجمي",
-    "Hummus Large boxes /حمص علب كبار",
-    "Hummus Small boxes /حمص علب صغار",
-    "Hummus Zad Al-Arabi /حمص زاد العربي",
-    "Hummus Al-Nuzha /حمص النزهة",
-    "Hummus Al-Khal /حمص الخال",
-    "Mutabal /متبل",
-    "Labneh /لبنة"
-  ];
+      <div class="footer-fields">
+        <div class="field">
+          <label>Details</label>
+          <textarea id="details" placeholder="تفاصيل إضافية..."></textarea>
+        </div>
+        <div class="field">
+          <label>Comments</label>
+          <textarea id="comments" placeholder="ملاحظات..."></textarea>
+        </div>
+      </div>
 
-  const tbody = document.querySelector("#items tbody");
-  const grandTotalEl = document.getElementById("grandTotal");
+      <div class="actions">
+        <button id="exportJsonBtn" type="button">تصدير JSON</button>
+        <button id="resetBtn" class="secondary" type="button">مسح النموذج</button>
+      </div>
 
-  function recalc() {
-    let sum = 0;
-    tbody.querySelectorAll("tr").forEach(tr => {
-      const cb = tr.querySelector("input[type=checkbox]");
+      <div class="note">
+        ملاحظة: زر "تصدير JSON" يعطيك البيانات بشكل جاهز لتخزينه بقاعدة بيانات عبر API لاحقاً.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const products = [
+      "Garlic Sauce/كريم الثوم",
+      "Hummus Alajamy /حمص العجمي",
+      "Hummus Large boxes /حمص علب كبار",
+      "Hummus Small boxes /حمص علب صغار",
+      "Hummus Zad Al-Arabi /حمص زاد العربي",
+      "Hummus Al-Nuzha /حمص النزهة",
+      "Hummus Al-Khal /حمص الخال",
+      "Mutabal /متبل",
+      "Labneh /لبنة"
+    ];
+
+    const tbody = document.querySelector("#items tbody");
+    const grandTotalEl = document.getElementById("grandTotal");
+
+    function recalc() {
+      let sum = 0;
+
+      tbody.querySelectorAll("tr").forEach(tr => {
+        const cb = tr.querySelector("input[type=checkbox]");
+        const qty = tr.querySelector(".qty");
+        const price = tr.querySelector(".price");
+        const totalEl = tr.querySelector(".lineTotal");
+
+        let line = 0;
+        if (cb.checked) {
+          const q = Number(qty.value || 0);
+          const p = Number(price.value || 0);
+          line = q * p;
+        }
+        totalEl.textContent = line.toFixed(2);
+        sum += line;
+      });
+
+      grandTotalEl.textContent = sum.toFixed(2);
+    }
+
+    function setEnabled(tr, enabled) {
       const qty = tr.querySelector(".qty");
       const price = tr.querySelector(".price");
-      const totalEl = tr.querySelector(".lineTotal");
 
-      let line = 0;
-      if (cb.checked) {
-        const q = Number(qty.value || 0);
-        const p = Number(price.value || 0);
-        line = q * p;
-      }
-      totalEl.textContent = line.toFixed(2);
-      sum += line;
+      qty.disabled = !enabled;
+      price.disabled = !enabled;
+
+      qty.classList.toggle("disabled", !enabled);
+      price.classList.toggle("disabled", !enabled);
+
+      if (!enabled) { qty.value = ""; price.value = ""; }
+      recalc();
+    }
+
+    function buildRows() {
+      tbody.innerHTML = "";
+      products.forEach(name => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><input type="checkbox" /></td>
+          <td>${name}</td>
+          <td><input class="qty disabled" type="number" min="0" step="1" disabled /></td>
+          <td><input class="price disabled" type="number" min="0" step="0.01" disabled /></td>
+          <td class="lineTotal">0.00</td>
+        `;
+
+        const cb = tr.querySelector("input[type=checkbox]");
+        cb.addEventListener("change", () => setEnabled(tr, cb.checked));
+        tr.querySelectorAll("input[type=number]").forEach(inp => inp.addEventListener("input", recalc));
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function collectData() {
+      const items = [];
+      tbody.querySelectorAll("tr").forEach(tr => {
+        const checked = tr.querySelector("input[type=checkbox]").checked;
+        if (!checked) return;
+
+        const product = tr.children[1].textContent.trim();
+        const qty = Number(tr.querySelector(".qty").value || 0);
+        const unitPrice = Number(tr.querySelector(".price").value || 0);
+
+        items.push({
+          product,
+          qty,
+          unitPrice,
+          total: Number((qty * unitPrice).toFixed(2))
+        });
+      });
+
+      const grandTotal = Number(grandTotalEl.textContent || 0);
+
+      return {
+        invoiceNo: document.getElementById("invoiceNo").value.trim(),
+        date: document.getElementById("date").value,
+        customer: document.getElementById("customer").value.trim(),
+        from: document.getElementById("from").value.trim(),
+        to: document.getElementById("to").value.trim(),
+        details: document.getElementById("details").value.trim(),
+        comments: document.getElementById("comments").value.trim(),
+        items,
+        grandTotal
+      };
+    }
+
+    function downloadJson(data) {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const safeNo = (data.invoiceNo || "invoice").replace(/[^\w\-]+/g, "_");
+      a.download = `${safeNo}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function resetForm() {
+      document.getElementById("invoiceNo").value = "";
+      document.getElementById("date").value = "";
+      document.getElementById("customer").value = "";
+      document.getElementById("from").value = "";
+      document.getElementById("to").value = "";
+      document.getElementById("details").value = "";
+      document.getElementById("comments").value = "";
+
+      tbody.querySelectorAll("tr").forEach(tr => {
+        tr.querySelector("input[type=checkbox]").checked = false;
+        setEnabled(tr, false);
+      });
+
+      recalc();
+    }
+
+    document.getElementById("exportJsonBtn").addEventListener("click", () => {
+      const data = collectData();
+      downloadJson(data);
     });
-    grandTotalEl.textContent = sum.toFixed(2);
-  }
 
-  function setEnabled(tr, enabled) {
-    const qty = tr.querySelector(".qty");
-    const price = tr.querySelector(".price");
-    qty.disabled = !enabled;
-    price.disabled = !enabled;
+    document.getElementById("resetBtn").addEventListener("click", resetForm);
 
-    qty.classList.toggle("disabled", !enabled);
-    price.classList.toggle("disabled", !enabled);
-
-    if (!enabled) { qty.value = ""; price.value = ""; }
+    // Init
+    buildRows();
     recalc();
-  }
-
-  products.forEach(name => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td><input type="checkbox" /></td>
-      <td>${name}</td>
-      <td><input class="qty" type="number" min="0" step="1" disabled /></td>
-      <td><input class="price" type="number" min="0" step="0.01" disabled /></td>
-      <td class="lineTotal">0.00</td>
-    `;
-    const cb = tr.querySelector("input[type=checkbox]");
-    cb.addEventListener("change", () => setEnabled(tr, cb.checked));
-    tr.querySelectorAll("input[type=number]").forEach(inp => inp.addEventListener("input", recalc));
-    tbody.appendChild(tr);
-  });
-</script>
-
+  </script>
 </body>
 </html>
